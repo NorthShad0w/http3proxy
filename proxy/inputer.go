@@ -2,13 +2,14 @@ package proxy
 
 import (
 	"errors"
-	"github.com/esrrhs/go-engine/src/common"
-	"github.com/esrrhs/go-engine/src/conn"
-	"github.com/esrrhs/go-engine/src/group"
-	"github.com/esrrhs/go-engine/src/loggo"
-	"github.com/esrrhs/go-engine/src/network"
 	"sync"
 	"sync/atomic"
+
+	"git.cyru1s.com/cyru1s/http3proxy/common"
+	"git.cyru1s.com/cyru1s/http3proxy/conn"
+	"git.cyru1s.com/cyru1s/http3proxy/group"
+	"git.cyru1s.com/cyru1s/http3proxy/loggo"
+	"git.cyru1s.com/cyru1s/http3proxy/network"
 )
 
 type Inputer struct {

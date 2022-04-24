@@ -3,8 +3,9 @@ package common
 import (
 	"errors"
 	"fmt"
-	"github.com/esrrhs/go-engine/src/loggo"
 	"runtime"
+
+	"git.cyru1s.com/cyru1s/http3proxy/loggo"
 )
 
 func CrashLog() {

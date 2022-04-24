@@ -2,13 +2,14 @@ package proxy
 
 import (
 	"errors"
-	"github.com/esrrhs/go-engine/src/common"
-	"github.com/esrrhs/go-engine/src/conn"
-	"github.com/esrrhs/go-engine/src/group"
-	"github.com/esrrhs/go-engine/src/loggo"
 	"strconv"
 	"sync"
 	"sync/atomic"
+
+	"git.cyru1s.com/cyru1s/http3proxy/common"
+	"git.cyru1s.com/cyru1s/http3proxy/conn"
+	"git.cyru1s.com/cyru1s/http3proxy/group"
+	"git.cyru1s.com/cyru1s/http3proxy/loggo"
 )
 
 type ClientConn struct {
@@ -40,7 +41,7 @@ func NewServer(config *Config, proto []string, listenaddrs []string) (*Server, e
 
 	var listenConns []conn.Conn
 
-	for i, _ := range proto {
+	for i := range proto {
 		conn, err := conn.NewConn(proto[i])
 		if conn == nil {
 			return nil, err

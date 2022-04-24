@@ -15,9 +15,9 @@ import (
 	"sync"
 	"time"
 
-	"github.com/esrrhs/go-engine/src/common"
-	"github.com/esrrhs/go-engine/src/group"
-	"github.com/esrrhs/go-engine/src/rbuffergo"
+	"git.cyru1s.com/cyru1s/http3proxy/common"
+	"git.cyru1s.com/cyru1s/http3proxy/group"
+	"git.cyru1s.com/cyru1s/http3proxy/rbuffergo"
 	"github.com/lucas-clemente/quic-go"
 	"github.com/lucas-clemente/quic-go/http3"
 )

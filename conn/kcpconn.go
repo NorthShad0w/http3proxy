@@ -3,9 +3,10 @@ package conn
 import (
 	"context"
 	"errors"
+	"net"
+
 	"github.com/xtaci/kcp-go"
 	"github.com/xtaci/smux"
-	"net"
 )
 
 type KcpConn struct {

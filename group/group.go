@@ -3,11 +3,12 @@ package group
 import (
 	"errors"
 	"fmt"
-	"github.com/esrrhs/go-engine/src/common"
-	"github.com/esrrhs/go-engine/src/loggo"
 	"sync"
 	"sync/atomic"
 	"time"
+
+	"git.cyru1s.com/cyru1s/http3proxy/common"
+	"git.cyru1s.com/cyru1s/http3proxy/loggo"
 )
 
 type Group struct {

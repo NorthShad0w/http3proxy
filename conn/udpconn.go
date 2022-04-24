@@ -3,11 +3,12 @@ package conn
 import (
 	"context"
 	"errors"
-	"github.com/esrrhs/go-engine/src/common"
-	"github.com/esrrhs/go-engine/src/group"
-    "git.cyru1s.com/cyru1s/http3proxy/loggo"
 	"net"
 	"sync"
+
+	"git.cyru1s.com/cyru1s/http3proxy/common"
+	"git.cyru1s.com/cyru1s/http3proxy/group"
+	"git.cyru1s.com/cyru1s/http3proxy/loggo"
 )
 
 type UdpConn struct {

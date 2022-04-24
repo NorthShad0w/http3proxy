@@ -81,7 +81,13 @@ func Debug(format string, a ...interface{}) {
 			defer file.Close()
 			file.WriteString(str)
 		}
-		print(str)
+		if !gConfig.NoPrint {
+			if !gConfig.NoLogColor {
+				print(str)
+			} else {
+				print(str)
+			}
+		}
 	}
 }
 
@@ -101,7 +107,11 @@ func Info(format string, a ...interface{}) {
 			}
 		}
 		if !gConfig.NoPrint {
-			print(str)
+			if !gConfig.NoLogColor {
+				print(str)
+			} else {
+				print(str)
+			}
 		}
 	}
 }
@@ -129,7 +139,11 @@ func Warn(format string, a ...interface{}) {
 			}
 		}
 		if !gConfig.NoPrint {
-			print(str)
+			if !gConfig.NoLogColor {
+				print(str)
+			} else {
+				print(str)
+			}
 		}
 	}
 }
@@ -164,7 +178,11 @@ func Error(format string, a ...interface{}) {
 			}
 		}
 		if !gConfig.NoPrint {
-			print(str)
+			if !gConfig.NoLogColor {
+				print(str)
+			} else {
+				print(str)
+			}
 		}
 	}
 }

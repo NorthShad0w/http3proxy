@@ -1,13 +1,14 @@
 package common
 
 import (
+	"io/ioutil"
+
 	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protodesc"
 	"google.golang.org/protobuf/reflect/protoreflect"
 	"google.golang.org/protobuf/types/descriptorpb"
 	"google.golang.org/protobuf/types/dynamicpb"
-	"io/ioutil"
 )
 
 func LoadProtobuf(filename string) (error, []protoreflect.FileDescriptor) {

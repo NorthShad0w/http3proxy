@@ -12,7 +12,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/esrrhs/go-engine/src/loggo"
+	"git.cyru1s.com/cyru1s/http3proxy/loggo"
 )
 
 var gEngineDir string

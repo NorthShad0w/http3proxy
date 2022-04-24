@@ -2,10 +2,11 @@ package conn
 
 import (
 	"fmt"
-	"github.com/esrrhs/go-engine/src/loggo"
 	"strconv"
 	"testing"
 	"time"
+
+	"git.cyru1s.com/cyru1s/http3proxy/loggo"
 )
 
 func Test000RUDP(t *testing.T) {

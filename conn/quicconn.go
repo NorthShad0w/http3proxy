@@ -6,7 +6,7 @@ import (
 	"errors"
 	"net"
 
-	"github.com/esrrhs/go-engine/src/common"
+	"git.cyru1s.com/cyru1s/http3proxy/common"
 	"github.com/lucas-clemente/quic-go"
 	"github.com/xtaci/smux"
 )

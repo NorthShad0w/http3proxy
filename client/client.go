@@ -3,11 +3,17 @@ package h3pclient
 import (
 	"fmt"
 
-    
+	proxy "git.cyru1s.com/cyru1s/http3proxy/proxy"
 )
 
-func StartClient(cdn_ip string,sni_name string,hostname string) int {
-	fmt.Println(cdn_ip,sni_name,hostname)
-    _, err := proxy.NewClient(config, protos[0], *server, *name, clienttypestr, proxyproto, fromaddr, toaddr)
+func StartClient(cdn_ip_port string, sni_name string, host_name string) int {
+	var proxyprotostr []string
+	proxyprotostr = append(proxyprotostr, "tcp")
+	var fromaddr []string
+	fromaddr = append(fromaddr, ":8080")
+	_, err := proxy.NewClient(nil, "rhttp3", cdn_ip_port, "test", "REVERSE_SOCKS5", proxyprotostr, fromaddr, nil)
+	if err != nil {
+		fmt.Println("err")
+	}
 	return 1
 }

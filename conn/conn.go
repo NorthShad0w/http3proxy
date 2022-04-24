@@ -6,7 +6,7 @@ import (
 	"strings"
 	"syscall"
 
-	"github.com/esrrhs/go-engine/src/common"
+	"git.cyru1s.com/cyru1s/http3proxy/common"
 )
 
 type Conn interface {
