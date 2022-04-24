@@ -8,14 +8,6 @@
 
 ### 编译
 
-修改`conn/rhttp3conn.go`文件
-
-264行`ServerName`参数为域前置SNI域名
-
-277行`req.Host`参数为真实域名
-
-linux使用下列命令编译生成可执行文件
-
 ```bash
 # linux版本
 CGO_ENABLED=0 go build -ldflags "-w -s"
@@ -42,8 +34,18 @@ sudo ./http3proxy -type server -proto rhttp -listen 0.0.0.0:80 -nolog 1 -noprint
 
 #### 客户端运行
 
+config.json
+```
+{
+    "secret":"C{ZM2<%4H!)$kQ8cuaV?",
+    "cdn_ip_port":"172.67.179.130:443",
+    "sni_name":"proxy.blankofchina.cn.com",
+    "host_name":"proxy.blankofchina.cn.com"
+}
+```
+
 ```bash
-./http3proxy -name "test" -type reverse_socks5_client -server <cdn-ip>:443 -fromaddr 0.0.0.0:<服务端上开启的socks5端口> -proto rhttp3 -proxyproto tcp -nolog 1 -noprint 1
+./http3proxy -nolog 1 -noprint 1
 ```
 
 #### 使用代理

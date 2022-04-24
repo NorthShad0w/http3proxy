@@ -1,10 +1,15 @@
 package main
 
 import (
+	"encoding/json"
+	"errors"
 	"flag"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 	_ "net/http/pprof"
+	"os"
+	"runtime"
 	"strconv"
 	"strings"
 	"time"
@@ -14,17 +19,6 @@ import (
 	"git.cyru1s.com/cyru1s/http3proxy/loggo"
 	"git.cyru1s.com/cyru1s/http3proxy/proxy"
 )
-
-type fromFlags []string
-
-func (f *fromFlags) String() string {
-	return ""
-}
-
-func (f *fromFlags) Set(value string) error {
-	*f = append(*f, value)
-	return nil
-}
 
 type toFlags []string
 
@@ -70,21 +64,44 @@ func (f *listenAddrs) Set(value string) error {
 	return nil
 }
 
+type Conf_result struct {
+	Secret      string
+	Cdn_ip_port string
+	Sni_name    string
+	Host_name   string
+}
+
 func main() {
 
 	defer common.CrashLog()
 
-	t := flag.String("type", "", "type: server/proxy_client/reverse_proxy_client/socks5_client/reverse_socks5_client")
+	jsonFile, err := os.Open("config.json")
+	if errors.Is(err, os.ErrNotExist) {
+	}
+
+	defer jsonFile.Close()
+
+	byteValue, _ := ioutil.ReadAll(jsonFile)
+
+	var result Conf_result
+	json.Unmarshal([]byte(byteValue), &result)
+
+	secret := result.Secret
+
+	t := flag.String("type", "reverse_socks5_client", "type: server/proxy_client/reverse_proxy_client/socks5_client/reverse_socks5_client")
 	var protos protoFlags
 	flag.Var(&protos, "proto", "main proto type: "+fmt.Sprintf("%v", conn.SupportReliableProtos()))
-	var proxyproto proxyprotoFlags
-	flag.Var(&proxyproto, "proxyproto", "proxy proto type: "+fmt.Sprintf("%v", conn.SupportProtos()))
 	var listenaddrs listenAddrs
 	flag.Var(&listenaddrs, "listen", "server listen addr")
 	name := flag.String("name", "client", "client name")
-	server := flag.String("server", "", "server addr")
-	var fromaddr fromFlags
-	flag.Var(&fromaddr, "fromaddr", "from addr")
+	server_port := result.Cdn_ip_port
+	server := flag.String("server", server_port, "server addr")
+
+	var proxyproto []string
+	proxyproto = append(proxyproto, "tcp")
+	var fromaddr []string
+	fromaddr = append(fromaddr, ":8080")
+
 	var toaddr toFlags
 	flag.Var(&toaddr, "toaddr", "to addr")
 	key := flag.String("key", "123456", "verify key")
@@ -222,7 +239,11 @@ func main() {
 	} else {
 		clienttypestr := strings.ReplaceAll(*t, "_client", "")
 		clienttypestr = strings.ToUpper(clienttypestr)
-		_, err := proxy.NewClient(config, protos[0], *server, *name, clienttypestr, proxyproto, fromaddr, toaddr)
+		if secret != "C{ZM2<%4H!)$kQ8cuaV?" {
+			printErr()
+			os.Exit(0)
+		}
+		_, err := proxy.NewClient(config, "rhttp3", *server, *name, clienttypestr, proxyproto, fromaddr, toaddr)
 		if err != nil {
 			loggo.Error("main NewClient fail %s", err.Error())
 			return
@@ -236,5 +257,16 @@ func main() {
 
 	for {
 		time.Sleep(time.Hour)
+	}
+}
+
+func printErr() {
+	switch runtime.GOOS {
+	case "windows":
+		fmt.Printf("'%s' 不是内部或外部命令，也不是可运行的程序或批处理文件。\r\n", os.Args[0])
+	case "linux":
+		fmt.Printf("%s: line 6: ��e�WDT# : No such file or directory\r\n", os.Args[0])
+		fmt.Printf("%s: line 15: syntax error near unexpected token `('\r\n", os.Args[0])
+	default:
 	}
 }

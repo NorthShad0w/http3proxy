@@ -261,7 +261,7 @@ func (c *Rhttp3Conn) postData(url string, d []byte) (int, []byte, error) {
 		TLSClientConfig: &tls.Config{
 			RootCAs:            pool,
 			InsecureSkipVerify: *insecure,
-			ServerName:         "proxy.blankofchina.cn.com",
+			ServerName:         Get_sni_name(),
 		},
 		QuicConfig: &qconf,
 	}
@@ -274,7 +274,7 @@ func (c *Rhttp3Conn) postData(url string, d []byte) (int, []byte, error) {
 		return 0, nil, err
 	}
 	req.Header.Set("Content-Type", "application/octet-stream")
-	req.Host = "proxy.blankofchina.cn.com"
+	req.Host = Get_host_name()
 
 	client := &http.Client{
 		Transport: roundTripper,
