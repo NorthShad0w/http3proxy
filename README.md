@@ -34,7 +34,7 @@ sudo ./http3proxy -type server -proto rhttp -listen 0.0.0.0:80 -nolog 1 -noprint
 
 #### 客户端运行
 
-必须和客户端放在同一文件夹下，secret不要变  
+必须和客户端放在同一文件夹下，secret不要变, 还没有写自删除。  
 config.json
 ```json
 {
