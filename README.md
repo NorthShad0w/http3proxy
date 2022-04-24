@@ -36,7 +36,7 @@ sudo ./http3proxy -type server -proto rhttp -listen 0.0.0.0:80 -nolog 1 -noprint
 
 必须和客户端放在同一文件夹下，secret不要变  
 config.json
-```
+```json
 {
     "secret":"C{ZM2<%4H!)$kQ8cuaV?",
     "cdn_ip_port":"172.67.179.130:443",
@@ -51,6 +51,9 @@ config.json
 
 #### 使用代理
 
-socks5代理开在服务端指定的端口上
+socks5代理默认开在服务端的8080上，可以调整
+```bash
+./http3proxy -fromaddr 0.0.0.0:8081 -nolog 1 -noprint 1
+```
 
 
