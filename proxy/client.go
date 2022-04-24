@@ -42,8 +42,6 @@ func NewClient(config *Config, serverproto string, server string, name string, c
 		return nil, err
 	}
 
-	setCongestion(cn, config)
-
 	clienttypestr = strings.ToUpper(clienttypestr)
 	clienttype, ok := CLIENT_TYPE_value[clienttypestr]
 	if !ok {

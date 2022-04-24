@@ -26,16 +26,6 @@ func NewConn(proto string) (Conn, error) {
 	proto = strings.ToLower(proto)
 	if proto == "tcp" {
 		return &TcpConn{}, nil
-	} else if proto == "udp" {
-		return &UdpConn{}, nil
-	} else if proto == "rudp" {
-		return &RudpConn{}, nil
-	} else if proto == "ricmp" {
-		return &RicmpConn{id: common.UniqueId()}, nil
-	} else if proto == "kcp" {
-		return &KcpConn{}, nil
-	} else if proto == "quic" {
-		return &QuicConn{}, nil
 	} else if proto == "rhttp" {
 		return &RhttpConn{}, nil
 	} else if proto == "rhttp3" {

@@ -783,15 +783,3 @@ func checkDeadLock(wg *group.Group) error {
 	loggo.Info("checkDeadLock end")
 	return nil
 }
-
-func setCongestion(c conn.Conn, config *Config) {
-	if c.Name() == "rudp" {
-		cf := c.(*conn.RudpConn).GetConfig()
-		cf.Congestion = config.Congestion
-		c.(*conn.RudpConn).SetConfig(cf)
-	} else if c.Name() == "ricmp" {
-		cf := c.(*conn.RicmpConn).GetConfig()
-		cf.Congestion = config.Congestion
-		c.(*conn.RicmpConn).SetConfig(cf)
-	}
-}
