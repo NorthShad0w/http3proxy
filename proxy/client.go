@@ -1,4 +1,4 @@
-package proxy
+package h3pproxy
 
 import (
 	"errors"
@@ -7,10 +7,10 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/esrrhs/go-engine/src/common"
-	"github.com/esrrhs/go-engine/src/conn"
-	"github.com/esrrhs/go-engine/src/group"
-	"github.com/esrrhs/go-engine/src/loggo"
+
+	"git.cyru1s.com/cyru1s/http3proxy/common"
+	"git.cyru1s.com/cyru1s/http3proxy/conn"
+	"git.cyru1s.com/cyru1s/http3proxy/group"
 )
 
 type ServerConn struct {
@@ -103,13 +103,11 @@ func (c *Client) Close() {
 }
 
 func (c *Client) connect(index int, conn conn.Conn) error {
-	loggo.Info("connect start %d %s", index, c.server)
 
 	for !c.wg.IsExit() {
 		if c.serverconn[index] == nil {
 			targetconn, err := conn.Dial(c.server)
 			if err != nil {
-				loggo.Error("connect Dial fail: %s %s", c.server, err.Error())
 				time.Sleep(time.Second)
 				continue
 			}
@@ -123,13 +121,11 @@ func (c *Client) connect(index int, conn conn.Conn) error {
 			time.Sleep(time.Second)
 		}
 	}
-	loggo.Info("connect end %s", c.server)
 	return nil
 }
 
 func (c *Client) useServer(index int, serverconn *ServerConn) error {
 
-	loggo.Info("useServer %s", serverconn.conn.Info())
 
 	sendch := common.NewChannel(c.config.MainBuffer)
 	recvch := common.NewChannel(c.config.MainBuffer)
@@ -138,7 +134,6 @@ func (c *Client) useServer(index int, serverconn *ServerConn) error {
 	serverconn.recvch = recvch
 
 	wg := group.NewGroup("Client useServer"+" "+serverconn.conn.Info(), c.wg, func() {
-		loggo.Info("group start exit %s", serverconn.conn.Info())
 		serverconn.conn.Close()
 		sendch.Close()
 		recvch.Close()
@@ -148,7 +143,6 @@ func (c *Client) useServer(index int, serverconn *ServerConn) error {
 		if serverconn.input != nil {
 			serverconn.input.Close()
 		}
-		loggo.Info("group end exit %s", serverconn.conn.Info())
 	})
 
 	c.login(index, sendch)
@@ -189,7 +183,6 @@ func (c *Client) useServer(index int, serverconn *ServerConn) error {
 
 	wg.Wait()
 	c.serverconn[index] = nil
-	loggo.Info("useServer close %s %s", c.server, serverconn.conn.Info())
 
 	return nil
 }
@@ -209,12 +202,10 @@ func (c *Client) login(index int, sendch *common.Channel) {
 
 	sendch.Write(f)
 
-	loggo.Info("start login %d %s %s", index, c.server, f.LoginFrame.String())
 }
 
 func (c *Client) process(wg *group.Group, index int, sendch *common.Channel, recvch *common.Channel, serverconn *ServerConn, pongflag *int32, pongtime *int64) error {
 
-	loggo.Info("process start %s", serverconn.conn.Info())
 
 	for !wg.IsExit() {
 
@@ -246,22 +237,18 @@ func (c *Client) process(wg *group.Group, index int, sendch *common.Channel, rec
 			c.processClose(f, serverconn)
 		}
 	}
-	loggo.Info("process end %s", serverconn.conn.Info())
 	return nil
 }
 
 func (c *Client) processLoginRsp(wg *group.Group, index int, f *ProxyFrame, sendch *common.Channel, serverconn *ServerConn) {
 	if !f.LoginRspFrame.Ret {
 		serverconn.needclose = true
-		loggo.Error("processLoginRsp fail %s %s", c.server, f.LoginRspFrame.Msg)
 		return
 	}
 
-	loggo.Info("processLoginRsp ok %s", c.server)
 
 	err := c.iniService(wg, index, serverconn)
 	if err != nil {
-		loggo.Error("processLoginRsp iniService fail %s %s", c.server, err)
 		return
 	}
 

